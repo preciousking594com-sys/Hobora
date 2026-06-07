@@ -1,5 +1,4 @@
-
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
@@ -101,34 +100,39 @@
 
       if (!name) return;
 
-      await supabase
+      const { data, error } = await supabase
         .from("communities")
         .insert([{ name }]);
+
+      if (error) {
+        console.log("ERROR:", error.message);
+        alert("Error: " + error.message);
+        return;
+      }
 
       input.value = "";
       loadCommunities();
     }
 
-    async function createCommunity() {
-  const input = document.getElementById("communityName");
-  const name = input.value.trim();
+    async function loadCommunities() {
+      const { data, error } = await supabase
+        .from("communities")
+        .select("*");
 
-  if (!name) return;
+      const list = document.getElementById("list");
 
-  const { data, error } = await supabase
-    .from("communities")
-    .insert([{ name }]);
+      if (error) {
+        console.log("LOAD ERROR:", error.message);
+        list.innerHTML = "Error loading data";
+        return;
+      }
 
-  if (error) {
-    console.log("ERROR:", error.message);
-    alert("Error: " + error.message);
-    return;
-  }
+      list.innerHTML = (data || [])
+        .map(c => `<div class="community">📌 ${c.name}</div>`)
+        .join("");
+    }
 
-  console.log("Inserted:", data);
-
-  input.value = "";
-  loadCommunities();
-        }</sc </script>
+    loadCommunities();
+  </script>
 </body>
 </html>
