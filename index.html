@@ -95,44 +95,4 @@
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     async function createCommunity() {
-      const input = document.getElementById("communityName");
-      const name = input.value.trim();
-
-      if (!name) return;
-
-      const { data, error } = await supabase
-        .from("communities")
-        .insert([{ name }]);
-
-      if (error) {
-        console.log("ERROR:", error.message);
-        alert("Error: " + error.message);
-        return;
-      }
-
-      input.value = "";
-      loadCommunities();
-    }
-
-    async function loadCommunities() {
-      const { data, error } = await supabase
-        .from("communities")
-        .select("*");
-
-      const list = document.getElementById("list");
-
-      if (error) {
-        console.log("LOAD ERROR:", error.message);
-        list.innerHTML = "Error loading data";
-        return;
-      }
-
-      list.innerHTML = (data || [])
-        .map(c => `<div class="community">📌 ${c.name}</div>`)
-        .join("");
-    }
-
-    loadCommunities();
-  </script>
-</body>
-</html>
+      const input =
