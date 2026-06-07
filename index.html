@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+
+      <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
   <title>Hobora</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     body {
       margin: 0;
@@ -86,27 +90,40 @@
   </div>
 
   <script>
-    let communities = [];
+    const supabaseUrl = "https://sodqdogmayvzlekiclay.supabase.co";
+    const supabaseKey = "sb_publishable_WKLm-rzkXaOS_lMtfi_Q6Q_buRl4UoV";
 
-    function createCommunity() {
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function createCommunity() {
       const input = document.getElementById("communityName");
       const name = input.value.trim();
 
       if (!name) return;
 
-      communities.push(name);
+      await supabase
+        .from("communities")
+        .insert([{ name }]);
+
       input.value = "";
-      render();
+      loadCommunities();
     }
 
-    function render() {
-      document.getElementById("list").innerHTML =
-        communities.map(c => `
-          <div class="community">📌 ${c}</div>
-        `).join("");
+    async function loadCommunities() {
+      const { data } = await supabase
+        .from("communities")
+        .select("*");
+
+      const list = document.getElementById("list");
+
+      if (!data) return;
+
+      list.innerHTML = data
+        .map(c => `<div class="community">📌 ${c.name}</div>`)
+        .join("");
     }
 
-    render();
+    loadCommunities();
   </script>
 </body>
 </html>
