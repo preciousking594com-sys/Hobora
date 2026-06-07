@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Hobora</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+    }
+
+    header {
+      background: #0f172a;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    h1 {
+      margin: 0;
+      color: #c9a227;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      background: #c9a227;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .community {
+      padding: 8px;
+      margin-top: 8px;
+      background: #0f172a;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>🌍 Hobora</h1>
+    <p>Global Community Platform (V1)</p>
+  </header>
+
+  <div class="container">
+
+    <div class="card">
+      <h3>Create Community</h3>
+      <input id="communityName" placeholder="Enter community name..." />
+      <button onclick="createCommunity()">Create</button>
+    </div>
+
+    <div class="card">
+      <h3>Communities</h3>
+      <div id="list"></div>
+    </div>
+
+  </div>
+
+  <script>
+    let communities = [];
+
+    function createCommunity() {
+      const input = document.getElementById("communityName");
+      const name = input.value.trim();
+
+      if (!name) return;
+
+      communities.push(name);
+      input.value = "";
+      render();
+    }
+
+    function render() {
+      document.getElementById("list").innerHTML =
+        communities.map(c => `
+          <div class="community">📌 ${c}</div>
+        `).join("");
+    }
+
+    render();
+  </script>
+</body>
+</html>
