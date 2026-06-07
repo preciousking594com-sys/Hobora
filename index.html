@@ -109,21 +109,26 @@
       loadCommunities();
     }
 
-    async function loadCommunities() {
-      const { data } = await supabase
-        .from("communities")
-        .select("*");
+    async function createCommunity() {
+  const input = document.getElementById("communityName");
+  const name = input.value.trim();
 
-      const list = document.getElementById("list");
+  if (!name) return;
 
-      if (!data) return;
+  const { data, error } = await supabase
+    .from("communities")
+    .insert([{ name }]);
 
-      list.innerHTML = data
-        .map(c => `<div class="community">📌 ${c.name}</div>`)
-        .join("");
-    }
+  if (error) {
+    console.log("ERROR:", error.message);
+    alert("Error: " + error.message);
+    return;
+  }
 
-    loadCommunities();
-  </script>
+  console.log("Inserted:", data);
+
+  input.value = "";
+  loadCommunities();
+        }</sc </script>
 </body>
 </html>
