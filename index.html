@@ -9,27 +9,24 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background: #0b1120;
-      color: #f8fafc;
+      color: white;
     }
 
     header {
-      background: #0f172a;
       padding: 20px;
       text-align: center;
+      background: #0f172a;
       border-bottom: 1px solid #1e293b;
     }
 
-    h1 {
-      margin: 0;
-      color: #c9a227;
-    }
+    h1 { color: #c9a227; }
 
     .container {
-      padding: 20px;
       max-width: 600px;
       margin: auto;
+      padding: 20px;
     }
 
     .card {
@@ -45,13 +42,12 @@
       margin-top: 10px;
       border-radius: 6px;
       border: none;
-      outline: none;
     }
 
     button {
+      width: 100%;
       margin-top: 10px;
       padding: 10px;
-      width: 100%;
       background: #c9a227;
       border: none;
       cursor: pointer;
@@ -59,40 +55,78 @@
     }
 
     .community {
+      background: #0f172a;
       padding: 8px;
       margin-top: 8px;
-      background: #0f172a;
       border-radius: 6px;
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>🌍 Hobora</h1>
-    <p>Global Community Platform (V1)</p>
-  </header>
 
-  <div class="container">
+<header>
+  <h1>🌍 Hobora</h1>
+  <p>Global Community Platform</p>
+</header>
 
-    <div class="card">
-      <h3>Create Community</h3>
-      <input id="communityName" placeholder="Enter community name..." />
-      <button onclick="createCommunity()">Create</button>
-    </div>
+<div class="container">
 
-    <div class="card">
-      <h3>Communities</h3>
-      <div id="list"></div>
-    </div>
-
+  <div class="card">
+    <h3>Create Community</h3>
+    <input id="name" placeholder="Enter community name..." />
+    <button onclick="createCommunity()">Create</button>
   </div>
 
-  <script>
-    const supabaseUrl = "https://sodqdogmayvzlekiclay.supabase.co";
-    const supabaseKey = "sb_publishable_WKLm-rzkXaOS_lMtfi_Q6Q_buRl4UoV";
+  <div class="card">
+    <h3>Communities</h3>
+    <div id="list"></div>
+  </div>
 
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+</div>
 
-    async function createCommunity() {
-      const input =
+<script>
+  const supabaseUrl = "https://sodqdogmayvzlekiclay.supabase.co";
+
+  // ⚠️ IMPORTANT: PUT YOUR NEW ANON KEY HERE
+  const supabaseKey = "PASTE_NEW_ANON_KEY_HERE";
+
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  async function createCommunity() {
+    const name = document.getElementById("name").value.trim();
+    if (!name) return;
+
+    const { error } = await supabase
+      .from("communities")
+      .insert([{ name }]);
+
+    if (error) {
+      alert("Error: " + error.message);
+      console.log(error);
+      return;
+    }
+
+    document.getElementById("name").value = "";
+    loadCommunities();
+  }
+
+  async function loadCommunities() {
+    const { data, error } = await supabase
+      .from("communities")
+      .select("*");
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    document.getElementById("list").innerHTML =
+      (data || []).map(c => `<div class="community">📌 ${c.name}</div>`).join("");
+  }
+
+  loadCommunities();
+</script>
+
+</body>
+</html>
